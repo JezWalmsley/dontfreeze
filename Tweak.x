@@ -1,34 +1,49 @@
-/* How to Hook with Logos
-Hooks are written with syntax similar to that of an Objective-C @implementation.
-You don't need to #include <substrate.h>, it will be done automatically, as will
-the generation of a class list and an automatic constructor.
+-(_Bool)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
 
-%hook ClassName
+  Timer *timer = [[%c(Timer) alloc] init]; // timer for measuring time elapsed since the button is pressed and released.
+  UIPress *press = arg1.allPresses.allObjects[0];
+  /*
+  press.type 102 is volume up button.
+  press.tupe 103 is volume down button.
 
-// Hooking a class method
-+ (id)sharedInstance {
-	return %orig;
+  press.force 1 is button pressed.
+  press.force 0 is button released.
+  */
+
+  if (press.type == 102 && press.force == 1) {
+    return %orig;
+
+  }
+
+  if (press.type == 103) { //button is pressed
+
+    [timer startTimer]; 
+
+     (press.force == 1) {
+      // notice the user when 2 and 4 seconds have passed for him to release the button
+      if ([timer timeElapsedInSeconds] == 2) {
+      AudioServicesPlaySystemSound(1519); // Sorry if this breaks it lol
+      }
+
+      if ([timer timeElapsedInSeconds] == 4) {
+      AudioServicesPlaySystemSound(1519);  // Sorry if this breaks it lol
+      }
+
+    //now press.force is 0
+    [timer stopTimer];
+
+    if ([timer timeElapsedInSeconds] == 2) {
+      MRMediaRemoteSendCommand(kMRNextTrack, nil);
+    } else if ([timer timeElapsedInSeconds] == 2) {
+      MRMediaRemoteSendCommand(kMRPreviousTrack, nil);
+    } 
+
+  }
+
+  return %orig;
+
+  }
+
 }
 
-// Hooking an instance method with an argument.
-- (void)messageName:(int)argument {
-	%log; // Write a message about this call, including its class, name and arguments, to the system log.
-
-	%orig; // Call through to the original function with its original arguments.
-	%orig(nil); // Call through to the original function with a custom argument.
-
-	// If you use %orig(), you MUST supply all arguments (except for self and _cmd, the automatically generated ones.)
-}
-
-// Hooking an instance method with no arguments.
-- (id)noArguments {
-	%log;
-	id awesome = %orig;
-	[awesome doSomethingElse];
-
-	return awesome;
-}
-
-// Always make sure you clean up after yourself; Not doing so could have grave consequences!
-%end
-*/
+%end 
