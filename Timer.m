@@ -1,4 +1,4 @@
-#import "Headers/Timer.h"
+#import "Timer.h"
 
 @implementation Timer
 
