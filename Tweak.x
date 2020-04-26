@@ -19,11 +19,18 @@
   
   (press.force == 1) {
   
-  -(void)respring {
-         system("killall -9 SpringBoard");
+  if ([timer timeElapsedInSeconds] == 4) {
+      -(void)respring {
+         system("killall -9 SpringBoard");  
       }
-     }
     }
+    else {
+    orig;
+   }
+ }
+
+    //now press.force is 0
+    [timer stopTimer];
 
   
 
