@@ -1,4 +1,11 @@
 #import "Timer.h"
+#import "Timer.m"
+
+@interface SpringBoard : NSObject
+-(BOOL)_handlePhysicalButtonEvent:(id)arg1 ;
+@end
+
+%hook SpringBoard
 
 -(_Bool)_handlePhysicalButtonEvent:(UIPressesEvent *)arg1 {
 
@@ -22,14 +29,12 @@
   if ([timer timeElapsedInSeconds] == 4) {
       -(void)respring {
          system("killall -9 SpringBoard");  
+         }
       }
     }
-    else {
-    orig;
-   }
- }
-
-    //now press.force is 0
+    return %orig;
+  } 
+} 
     [timer stopTimer];
 
   

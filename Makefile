@@ -1,4 +1,4 @@
-archs = arm64 arm64e
+ARCHS = arm64 arm64e
 
 INSTALL_TARGET_PROCESSES = SpringBoard
 
